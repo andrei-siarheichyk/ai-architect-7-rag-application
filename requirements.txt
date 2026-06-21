@@ -1,0 +1,10 @@
+llama-index-core
+llama-index-embeddings-ollama
+chromadb
+tinydb
+pymupdf
+streamlit
+ollama
+openai
+plotly
+ragas

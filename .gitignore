@@ -1,0 +1,28 @@
+# Vector store and metadata databases (rebuilt by running ingestion)
+db/
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.venv/
+venv/
+env/
+
+# .NET build artifacts
+ResumeRag/bin/
+ResumeRag/obj/
+ResumeRag
+
+# macOS
+.DS_Store
+
+# IDE
+.idea/
+.vscode/
+
+# Claude Code local session storage
+.claude/
+
+# Temporary verification files
+/tmp/
