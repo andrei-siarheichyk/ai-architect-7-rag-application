@@ -1,3 +1,7 @@
+## Purpose
+
+The project README documents setup, configuration, usage, evaluation, and assignment coverage so a developer can run the app from a clean clone.
+## Requirements
 ### Requirement: README exists at project root
 The repository SHALL contain a `README.md` at the root level that covers setup, usage, and assignment coverage.
 
@@ -6,11 +10,11 @@ The repository SHALL contain a `README.md` at the root level that covers setup, 
 - **THEN** `README.md` SHALL be present at the root and readable without any build step
 
 ### Requirement: Prerequisites section
-The README SHALL list all prerequisites a developer needs before running the app: Python version, Ollama installation, required Ollama model, and the EPAM DIAL / Azure OpenAI API key.
+The README SHALL list all prerequisites a developer needs before running the app: Python version and the EPAM DIAL / Azure OpenAI API key (used for both chat completions and embeddings). The README SHALL NOT require a local Ollama installation or model pull.
 
-#### Scenario: Ollama model called out
+#### Scenario: Embedding model called out
 - **WHEN** a developer reads the Prerequisites section
-- **THEN** the exact `ollama pull nomic-embed-text` command SHALL appear so the embedding model is ready before ingestion
+- **THEN** the DIAL / Azure OpenAI embedding model `text-embedding-3-small-1` and the required API key SHALL be documented so embeddings work before ingestion, with no `ollama pull` step
 
 ### Requirement: Installation and run instructions
 The README SHALL provide copy-pasteable commands to install dependencies and start the Streamlit app.
@@ -24,7 +28,7 @@ The README SHALL describe the three main tabs — Ingestion, Search & Ask, and A
 
 #### Scenario: Ingestion described
 - **WHEN** a developer reads the Features section
-- **THEN** they SHALL understand that PDF resumes are chunked, embedded with Ollama, and stored in ChromaDB
+- **THEN** they SHALL understand that PDF resumes are chunked, embedded via the EPAM DIAL / Azure OpenAI proxy, and stored in ChromaDB
 
 #### Scenario: Search & Ask described
 - **WHEN** a developer reads the Features section
@@ -43,3 +47,4 @@ The README SHALL contain a section that maps each assignment requirement and Nin
 #### Scenario: All requirements listed
 - **WHEN** a developer reads the Assignment Coverage section
 - **THEN** every base requirement and every completed Ninja challenge SHALL appear with a one-line description of how it is implemented
+

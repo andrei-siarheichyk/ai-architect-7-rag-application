@@ -1,22 +1,31 @@
 import chromadb
 from llama_index.core.node_parser import SentenceSplitter
 from llama_index.core.schema import Document
-from llama_index.embeddings.ollama import OllamaEmbedding
+from openai import AzureOpenAI
 
-from src.config import CHROMA_DIR, EMBED_MODEL, OLLAMA_BASE_URL, CHUNK_SIZE, CHUNK_OVERLAP
+from src.config import (
+    CHROMA_DIR,
+    EMBED_MODEL,
+    OPENAI_API_KEY,
+    AZURE_ENDPOINT,
+    AZURE_API_VERSION,
+    CHUNK_SIZE,
+    CHUNK_OVERLAP,
+)
 
-_embed_model: OllamaEmbedding | None = None
+_client: AzureOpenAI | None = None
 _chroma_collection = None
 
 
-def _get_embed_model() -> OllamaEmbedding:
-    global _embed_model
-    if _embed_model is None:
-        _embed_model = OllamaEmbedding(
-            model_name=EMBED_MODEL,
-            base_url=OLLAMA_BASE_URL,
+def _get_client() -> AzureOpenAI:
+    global _client
+    if _client is None:
+        _client = AzureOpenAI(
+            api_key=OPENAI_API_KEY,
+            azure_endpoint=AZURE_ENDPOINT,
+            api_version=AZURE_API_VERSION,
         )
-    return _embed_model
+    return _client
 
 
 def _get_collection():
@@ -43,7 +52,8 @@ def chunk_and_store(resume_id: str, category: str, text: str) -> int:
     texts = [node.get_content() for node in nodes]
     total = len(texts)
 
-    embeddings = _get_embed_model().get_text_embedding_batch(texts)
+    response = _get_client().embeddings.create(model=EMBED_MODEL, input=texts)
+    embeddings = [item.embedding for item in sorted(response.data, key=lambda d: d.index)]
     collection = _get_collection()
 
     collection.add(

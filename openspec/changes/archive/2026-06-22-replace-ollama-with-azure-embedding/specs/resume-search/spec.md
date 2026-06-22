@@ -1,7 +1,5 @@
-## Purpose
+## MODIFIED Requirements
 
-Semantic search over ingested resume chunks: users enter a natural-language query and retrieve the most similar resume chunks from ChromaDB, with a configurable result count.
-## Requirements
 ### Requirement: Semantic search over resume chunks
 The system SHALL allow users to enter a natural language query and retrieve the top-K most semantically similar resume chunks from ChromaDB using `text-embedding-3-small-1` embeddings served by the EPAM DIAL / Azure OpenAI-compatible proxy.
 
@@ -16,11 +14,3 @@ The system SHALL allow users to enter a natural language query and retrieve the 
 #### Scenario: Search with embedding provider unavailable
 - **WHEN** the embedding call to the DIAL / Azure OpenAI proxy fails
 - **THEN** the system SHALL display a clear error message and not crash
-
-### Requirement: Configurable result count
-The system SHALL provide a slider to configure K (number of results), defaulting to 5 with a range of 1–10.
-
-#### Scenario: User adjusts top-K slider
-- **WHEN** the user moves the slider to K=3 and searches
-- **THEN** the system SHALL return at most 3 results
-

@@ -1,20 +1,21 @@
 import chromadb
-from llama_index.embeddings.ollama import OllamaEmbedding
+from openai import AzureOpenAI
 
-from src.config import CHROMA_DIR, EMBED_MODEL, OLLAMA_BASE_URL
+from src.config import CHROMA_DIR, EMBED_MODEL, OPENAI_API_KEY, AZURE_ENDPOINT, AZURE_API_VERSION
 
-_embed_model: OllamaEmbedding | None = None
+_client: AzureOpenAI | None = None
 _collection = None
 
 
-def _get_embed_model() -> OllamaEmbedding:
-    global _embed_model
-    if _embed_model is None:
-        _embed_model = OllamaEmbedding(
-            model_name=EMBED_MODEL,
-            base_url=OLLAMA_BASE_URL,
+def _get_client() -> AzureOpenAI:
+    global _client
+    if _client is None:
+        _client = AzureOpenAI(
+            api_key=OPENAI_API_KEY,
+            azure_endpoint=AZURE_ENDPOINT,
+            api_version=AZURE_API_VERSION,
         )
-    return _embed_model
+    return _client
 
 
 def _get_collection():
@@ -34,7 +35,7 @@ def collection_count() -> int:
 
 def search(query: str, top_k: int = 5, allowed_categories: list[str] | None = None) -> list[dict]:
     """Embed query and return top-K matching chunks from ChromaDB."""
-    embedding = _get_embed_model().get_text_embedding(query)
+    embedding = _get_client().embeddings.create(model=EMBED_MODEL, input=[query]).data[0].embedding
     where = {"category": {"$in": allowed_categories}} if allowed_categories else None
     results = _get_collection().query(
         query_embeddings=[embedding],

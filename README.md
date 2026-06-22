@@ -1,6 +1,6 @@
 # Resume Analyzer — RAG Application
 
-A Retrieval-Augmented Generation (RAG) application that ingests PDF resumes, enables semantic search and natural-language Q&A over them, and visualizes workforce analytics. Built with **LlamaIndex**, **ChromaDB**, **Ollama**, and **Streamlit**.
+A Retrieval-Augmented Generation (RAG) application that ingests PDF resumes, enables semantic search and natural-language Q&A over them, and visualizes workforce analytics. Built with **LlamaIndex**, **ChromaDB**, the **EPAM DIAL / Azure OpenAI proxy**, and **Streamlit**.
 
 ---
 
@@ -23,15 +23,10 @@ Source: [Kaggle — Resume Dataset](https://www.kaggle.com/datasets/snehaanbhawa
 | Requirement | Version / Notes |
 |---|---|
 | Python | 3.11 or later |
-| [Ollama](https://ollama.com/) | Running locally on `http://localhost:11434` |
-| Embedding model | `ollama pull nomic-embed-text` |
-| LLM API key | EPAM DIAL proxy (Azure OpenAI compatible) — see Configuration below |
+| Embedding model | `text-embedding-3-small-1` via the EPAM DIAL proxy (no local install) |
+| API key | EPAM DIAL proxy (Azure OpenAI compatible) — used for both chat completions and embeddings; see Configuration below |
 
-Pull the embedding model before running ingestion:
-
-```bash
-ollama pull nomic-embed-text
-```
+Both the LLM and the embedding model are served by the EPAM DIAL proxy, so only the API key below is required before running ingestion.
 
 ---
 
@@ -76,7 +71,7 @@ Point the app at the `data/` folder (default) and click **Start Ingestion**:
 
 1. PDFs are extracted with **PyMuPDF**
 2. Text is split into 512-token chunks with a 50-token overlap (**LlamaIndex SentenceSplitter**)
-3. Chunks are embedded with **Ollama** (`nomic-embed-text`) and stored in **ChromaDB**
+3. Chunks are embedded via the **EPAM DIAL / Azure OpenAI proxy** (`text-embedding-3-small-1`) and stored in **ChromaDB**
 4. Structured fields (skills, years of experience, education, job titles) are extracted via the LLM and stored in **TinyDB**
 
 **Incremental updates**: Re-running ingestion skips unchanged files (SHA-256 hash comparison), re-ingests modified files in-place, and removes deleted files from both stores — no full rebuild needed.
